@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="signInFormSection">
+    <form id="signUpForm" method="POST" action="/signup">
+
+        <div class="signUpHeader">Sign Up</div>
+
+        <div class="column-flex-container">
+            <label class="labels" for="username">Username</label>
+            <input onblur="checkUserName()" id="username" type="username" name="userId" placeholder="set unique username">
+            <p class="errMsg" id="uniqueUserNameError" name="errorMsg" style="display:none;">Username Exists, try another</p>
+            <p class="succMsg" id="uniqueUserNameSuccess"  style="display:none;">Good to Go!!!</p>
+            <button class="btn_form_2" type="button" onclick="checkUsername()">Check Availability</button>
+        </div>
+
+        <div class="column-flex-container">
+            <label class="labels" for="pass1">Password</label>
+            <input type="password" id="pass1" name="pass" onblur="checkPassword()" placeholder="Set Password">
+            <p class="errMsg" name="errorMsg" style="display:none;" id="passwordLengthError">Password should be atleast 5 characters</p>
+        </div>
+
+        <div class="column-flex-container">
+            <label class="labels" for="pass2">Retype Password</label>
+            <input type="password" id="pass2" name="pass1" onblur="checkPasswordRetype()" placeholder="Retype Password">
+            <p class="errMsg" name="errorMsg" style="display:none;" id="passwordMisMatchError">Passwords are not same</p>
+        </div>
+
+        <div class="column-flex-container">
+            <label class="labels" for="name">Name</label>
+            <input name="name" id="name" onblur="checkName()" placeholder="your name">
+            <p class="errMsg" name="errorMsg" style="display:none;" id="nameLengthError">Name should be atleast 3 characters</p>
+        </div>
+
+        <div class="column-flex-container">
+            <button class="btn_form" onclick="submitForm()" type="button">submit</button>
+            <p id="submitErr" style="display:none;">Cannot Submit due to errors</p>
+        </div>
+    </form>
+</div>
+<script>
+    function checkUserName(){
+        document.getElementById("uniqueUserNameError").style.display="none";
+        document.getElementById("uniqueUserNameSuccess").style.display="none";
+    }
+    function checkName(){
+        var ele=document.getElementById("name");
+        var errEle=document.getElementById("nameLengthError");
+        if(ele.value.length<3){
+            errEle.style.display="block";
+        }
+        else{
+            errEle.style.display="none";
+        }
+    }
+    function checkPasswordRetype(){
+        var ele=document.getElementById("pass2");
+        var errEle=document.getElementById("passwordMisMatchError");
+        var pass1=document.getElementById("pass1").value;
+        var pass2=ele.value;
+        console.log(pass1);
+        console.log(pass2);
+        if(pass1===pass2){
+            errEle.style.display="none";
+        }
+        else{
+            errEle.style.display="block";
+        }
+    }
+    function checkPassword(){
+        var ele=document.getElementById("pass1");
+        var errEle=document.getElementById("passwordLengthError");
+        var pass2=document.getElementById("pass2");
+        if(pass2.value.length!==0){
+            checkPasswordRetype(pass2);
+        }
+        if(ele.value.length<5){
+            errEle.style.display="block";
+        }
+        else{
+            errEle.style.display="none";
+        }
+    }
+    function checkErr(){
+        var errElements=document.getElementsByName("errorMsg");
+        let count=0;
+        for (let i = 0; i < errElements.length; i++) {
+            if(errElements[i].style.display==="block"){
+                count+=1;
+            }
+        }
+        return count;
+    }
+    async function checkUsername(){
+        console.log(window.location.hostname);
+        console.log(window.location.port);
+        console.log("hello");
+        var username=document.getElementById("username").value;
+        res=await fetch("http://"+window.location.hostname+":"+window.location.port+"/isUserIdAvailable?username="+username)
+        .then((response) => response.json());
+        var errEle=document.getElementById("uniqueUserNameError");
+        var sucEle=document.getElementById("uniqueUserNameSuccess");
+        if(res["data"]==="1"){
+            errEle.style.display="block";
+            sucEle.style.display="none";
+        }
+        else{
+            errEle.style.display="none";
+            sucEle.style.display="block";
+        }
+    }
+
+    async function submitForm(){
+        checkUsername();
+        checkName();
+        checkPassword();
+        checkPasswordRetype();
+        if(checkErr()===0){
+            document.getElementById("signUpForm").submit();
+        }
+        else{
+            alert("Insert Valid Values");
+        }
+    }
+</script>
+<style>
+    .signInFormSection{
+        height: 150vh;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #signUpForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        padding: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 16px;
+        border-color: lightgray;
+        background-color: white;
+    }
+
+    .signUpHeader{
+        color: #282a35;
+        font-size: 29px;
+        font-weight: 700;
+        font-family: 'Source Sans Pro', sans-serif;
+        margin: 0 0 10px;
+    }
+
+    .column-flex-container{
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        margin: 15px;
+        
+    }
+
+    input{
+        width: 60vh;
+        height: 40px;
+        border-radius: 12px;
+        border-color: gray;
+        border-width: 1px;
+        border-style: solid;
+        padding-left: 10px;
+    }
+
+    
+    .btn_form_2{
+        width: 150px;
+        height:40px;
+        color: white;
+        background-color: yellowgreen;
+        border-radius: 12px;
+        border-color: azure;
+        border-width: 1px;
+        border-style: solid;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        font-family: 'Source Sans Pro', sans-serif;
+        margin: 15px 0 0;
+    }
+</style>
+{% endblock %}

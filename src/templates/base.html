@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+        <script src="https://kit.fontawesome.com/a0299f62c5.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="no-m-no-p">
+        <div class="navbar flex-container">
+            <p class="logo">ToDo</p>
+            <div class="flex-center">
+                <ul class="flex-center" style="list-style-type:none;">
+                    {% if current_user.is_authenticated %}
+                    <li><a class="link-item" href="{{url_for('main.home')}}">Home</a></li>
+                    <li><a class="link-item" href="{{url_for('profile.home')}}">Profile</a></li>
+                    {% endif %}
+                    <li><a class="link-item" href="#">About Us</a></li>
+                    <li><a class="link-item" href="#">Contact us</a></li>
+                </ul>
+            </div>
+            {% if not current_user.is_authenticated %}
+            <div class="flex-center btn-sec">
+                <button class="mar-r btn"><a href="{{url_for('auth.login')}}">Log In</a></button>
+                <button class="mar-l btn"><a href="{{url_for('auth.signup')}}">Sign Up</a></button>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="falshMessages">
+            {% with messages=get_flashed_messages() %}
+                {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div>
+            {% block body%}
+            {% endblock %}
+        </div>
+    </body>
+</html>
+
+
+
+
+
+<style>
+    a{
+        color: white;
+        text-decoration: none;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    .btn{
+        color: white;
+        background-color: transparent;
+        border-radius: 8px;
+        border-color: azure;
+        border-width: 1px;
+        border-style: solid;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        font-family: Verdana;
+    }
+    .flex-center{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    li{
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+    .logo{
+        margin-left: 20px;
+    }
+    
+    .btn-sec{
+        margin-right: 20px;
+    }
+    .mar-r{
+        margin-right: 6px;
+    }
+    .mar-l{
+        margin-left:6px;
+    }
+    .flex-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .flex-container-list{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .navbar{
+        background-color:grey;
+        margin: 0px;
+        padding: 0px;
+    }
+    .labels{
+        font-weight: 600;
+        color: #4a4a4a;
+        font-family: 'Source Sans Pro', sans-serif;
+        margin: 0 0 10px;
+    }
+    .no-m-no-p{
+        margin: 0px;
+        padding: 0px;
+        font-family: 'Source Sans Pro', sans-serif;
+    }
+    .btn_form{
+        width: 120px;
+        height:40px;
+        color: white;
+        background-color: blue;
+        border-radius: 12px;
+        border-color: azure;
+        border-width: 1px;
+        border-style: solid;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        font-family: Verdana;
+    }
+    .btn_form_mini{
+        margin-top: 5px;
+        font-size: 10px;
+        width: 60px;
+        height:20px;
+        color: white;
+        background-color: blue;
+        border-radius: 12px;
+        border-color: azure;
+        border-width: 1px;
+        border-style: solid;
+        padding-left: 3px;
+        padding-right: 3px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        font-family: Verdana;
+    }
+    .errMsg{
+        color: red;
+        margin: 0 0 0;
+    }
+    .succMsg{
+        color: green;
+        margin: 0 5px 0;
+    }
+    .flex-container-row{
+        display: flex;
+        flex-direction: row;
+    }
+    .flex-container-column{
+        display: flex;
+        flex-direction: column;
+    }
+    .flex-c-c{
+        justify-content: center;
+    }
+    .flex-c-fs{
+        justify-content: flex-start;
+    }
+</style>

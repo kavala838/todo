@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="home-container">
+
+    <div class="workspace-section">
+        {% for wk in workspaces %}
+        {% if wk==ws %}
+        <div class="highlighted-wk-link workspace-section-item-1"><a href="/?wk={{ wk.id }}">{{wk.name}}</a></div>
+        {% else %}
+        <div class="workspace-section-item"><a href="/?wk={{ wk.id }}">{{wk.name}}</a></div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="homeSection">
+
+        <div class="home-section-item tasks-section-container">
+            <div class="profileSettingSectionHeader">
+                <h1 class="profileSettingSectionHeaderVal">Tasks</h1>
+            </div>
+            <hr style="width:100%;text-align:left;margin:0">
+            <div class="tasks-section">
+                {% for task in tasks %}
+
+                <div class="task-item-container">
+                    <div class="task-item">
+                        {% if task.overdue %}
+                        <form class='checkbox-tasks red task-item-ele' id="completeTaskForm{{task.id}}"
+                            action="/completeTask?id={{task.id}}" method="POST">
+                            <input onchange="completeTask('{{ task.id }}')" type="checkbox">
+                        </form>
+                        <p class="name-tasks red task-item-ele">{{task.name}}</p>
+                        <p class="timeleft-tasks red task-item-ele">{{task.timeleft}}</p>
+                        <form class="red task-item-ele" id="deleteTaskForm{{task.id}}"
+                            action="/deleteTask?id={{task.id}}" method="POST"></form>
+                        <i onclick="deleteTask('{{ task.id }}')"
+                            class="delete-tasks task-item-ele red fa fa-trash-o"></i>
+                        </form>
+                        {% else %}
+                        <form class="checkbox-tasks task-item-ele" id="completeTaskForm{{task.id}}"
+                            action="/completeTask?id={{task.id}}" method="POST">
+                            <input onchange="completeTask('{{ task.id }}')" type="checkbox">
+                        </form>
+                        <p class="name-tasks task-item-ele">{{task.name}}</p>
+                        <p class="timeleft-tasks task-item-ele">{{task.timeleft}}</p>
+                        <form class="task-item-ele" id="deleteTaskForm{{task.id}}" action="/deleteTask?id={{task.id}}"
+                            method="POST"></form>
+                        <i onclick="deleteTask('{{ task.id }}')" class="delete-tasks task-item-ele fa fa-trash-o"></i>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <div class="label-container">
+                        {% for label in task.labels %}
+                        <p class="label">{{label.name}}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <hr style="width:100%;text-align:left;margin:0">
+                {% endfor %}
+
+            </div>
+            <div class="profileSettingSectionHeader">
+                <div id="tasks-close" onclick="open1(this)"><i class="fa fa-greater-than"></i></div>
+                <div id="tasks-open" style="display: none;" onclick="close1(this)">
+                    <h1 class="v-open">V</h1>
+                </div>
+                <h1 class="profileSettingSectionHeaderVal">Completed Tasks</h1>
+            </div>
+            <hr style="width:100%;text-align:left;margin:0">
+            <div id="done-task-section" class="tasks-section" style="display: none;">
+                {% for task in done_tasks %}
+
+                <div class="task-item-container done-task-item">
+                    <div class="task-item">
+                        <form class="checkbox-tasks task-item-ele" id="completeTaskForm{{task.id}}"
+                            action="/uncompleteTask?id={{task.id}}" method="POST">
+                            <input onchange="completeTask('{{ task.id }}')" type="checkbox" checked>
+                        </form>
+                        <p class="name-tasks task-item-ele"><s>{{task.name}}</s></p>
+                        <p class="timeleft-tasks task-item-ele">{{task.timeleft}}</p>
+                        <form class="task-item-ele" id="deleteTaskForm{{task.id}}" action="/deleteTask?id={{task.id}}"
+                            method="POST"></form>
+                        <i onclick="deleteTask('{{ task.id }}')" class="delete-tasks task-item-ele fa fa-trash-o"></i>
+                        </form>
+                    </div>
+                    <div class="label-container">
+                        {% for label in task.labels %}
+                        <p class="label">{{label.name}}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="home-section-item add-task-section">
+            <div class="profileSettingSectionHeader">
+                <h1 class="profileSettingSectionHeaderVal">Add Task</h1>
+            </div>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <div class="addTaskFormContainer">
+                <form id="addTaskForm" action="/addTask" method="POST">
+                    <label class="labels1" for="addTaskName">Task:</label>
+                    <input class="addTaskInput" id="addTaskName" name="taskName" type="text" placeholder="Name of the task">
+                    <label class="labels1" for="addTaskDeadLine">DeadLine:</label>
+                    <input class="addTaskInput" id="addTaskDeadLine" name="deadline" type="date">
+                    <label class="labels1" for="wkspaces">Workspace:</label>
+                    <select class="addTaskInput" id="wkspaces" name="wkspaces">
+                        {% for wk in workspaces %}
+                        <option value="{{wk.id}}">{{wk.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <label class="labels1" for="labelsSelect">Labels:</label>
+                    <select id="labelsSelect" name="labels1" style="display: none;" multiple>
+                        {% for label in labels%}
+                        <option value="{{label.id}}">{{label.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="label-container" id="labelsSection">
+                        {% for label in labels %}
+                        <div value="{{label.id}}" onclick="toggleSelect(this)" class="item">{{label.name}}</div>
+                        {% endfor %}
+                    </div>
+                    <button class="addTaskButton" onclick="submitTask()" type="button">Add Task</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function open1(ele) {
+        console.log('hello');
+        const tasks = document.getElementById("done-task-section");
+        console.log(tasks);
+        const openA = document.getElementById('tasks-open');
+        const closeA = document.getElementById('tasks-close');
+        closeA.style.display = "none";
+        openA.style.display = "block";
+        tasks.style.display = "block";
+    }
+    function close1(ele) {
+        var tasks = document.getElementById("done-task-section");
+        var openA = document.getElementById('tasks-open');
+        var closeA = document.getElementById('tasks-close');
+        closeA.style.display = "block";
+        openA.style.display = "none";
+        tasks.style.display = "none";
+    }
+    function toggleSelect(ele) {
+        const classNames = ele.classList;
+        classNames.toggle("selectedItem");
+    }
+
+    function submitTask() {
+        const lele = document.getElementById("labelsSelect");
+        var leles = document.getElementsByClassName('item');
+        const res = Array.from(leles).filter(checkSelected);
+        for (let i = 0; i < res.length; i++) {
+            var t = lele.querySelector('[value="' + res[i].getAttribute('value') + '"]');
+            t.selected = true;
+        }
+        document.getElementById("addTaskForm").submit();
+    }
+
+    function checkSelected(ele) {
+        if (Array.from(ele.classList).includes("selectedItem")) {
+            return true;
+        }
+        return false;
+    }
+
+    function completeTask(id) {
+        document.getElementById("completeTaskForm" + id).submit();
+    }
+
+    function deleteTask(id) {
+        document.getElementById("deleteTaskForm" + id).submit();
+    }
+</script>
+
+<style>
+    .addTaskButton{
+        margin-top: 8px;
+        align-self: center;
+        background-color: blue;
+        border-style: solid;
+        border-width: 0px;
+        border-radius: 8px;
+        color: white;
+        width: 60%;
+        height: 30px;
+    }
+    .addTaskFormContainer{
+        width: 75%;
+        padding: 20px;
+    }
+    .addTaskInput{
+        margin-bottom: 8px;
+    }
+    .add-task-section{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 30vw;
+    }
+    #addTaskForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+        
+    }
+    .labels1{
+        font-weight: 600;
+        color: #4a4a4a;
+        font-family: 'Source Sans Pro', sans-serif;
+        margin: 0 0 0;
+    }
+    .v-open {
+        font-size: 15px;
+    }
+
+    .task-item-ele {
+        margin-left: 10px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .profileSettingSectionHeaderVal {
+        padding: 0px;
+        margin: 0;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .profileSettingSectionHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .highlighted-wk-link {
+        background-color: blue;
+        border-radius: 8px;
+    }
+
+    .workspace-section {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100vw;
+        margin: 0px;
+        border-style: solid;
+        border-color: grey;
+        border-width: 1px;
+    }
+
+    .home-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0px;
+    }
+
+    .homeSection {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 30px;
+    }
+
+    .home-section-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 0px;
+        padding-bottom: 15px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 16px;
+        border-color: lightgray;
+        background-color: white;
+        margin-right: 150px;
+    }
+
+    .item {
+        background-color: transparent;
+        border-color: grey;
+        border-style: solid;
+        border-radius: 5px;
+        border-width: 1px;
+        color: black;
+        padding: 1px;
+        margin: 0px;
+        margin-bottom: 2px;
+        margin-left: 4px;
+        font-size: 12px;
+    }
+
+    .selectedItem {
+        background-color: tan;
+    }
+
+    .workspace-section-item>a {
+        color: black;
+        padding: 3px 20px 3px;
+    }
+
+    .workspace-section-item-1>a {
+        color: white;
+        padding: 3px 20px 3px;
+    }
+
+    .task-item {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-left: 10px;
+        margin-right: 10px;
+        padding: 0px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        width: 100%;
+    }
+
+    .task-item-container {
+        padding: 0px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .label-container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        flex-wrap: wrap;
+        margin: 0px;
+        margin-left: 20%;
+    }
+
+    .label {
+        background-color: rgb(201, 114, 114);
+        border-style: solid;
+        border-radius: 5px;
+        border-width: 0px;
+        color: white;
+        padding: 1px;
+        margin: 0px;
+        margin-bottom: 2px;
+        margin-left: 4px;
+        font-size: 12px;
+    }
+
+    .tasks-section-container {
+        width: 45vw;
+    }
+
+    .tasks-section {
+        width: 100%;
+    }
+
+    .checkbox-tasks {
+        width: 5%;
+    }
+
+    .name-tasks {
+        width: 70%;
+    }
+
+    .timeleft-tasks {
+        width: 20%;
+    }
+
+    .delete-tasks {
+        width: 5%;
+    }
+</style>
+{% endblock %}

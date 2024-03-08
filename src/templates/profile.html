@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="profileSection">
+
+    <div class="profileDataDection profileItem0">
+        <div class="profileInfoSec">
+            <div class="profileIconContainer">
+                <i style="color: #ffffff;" class="fa fa-user ics"></i>
+            </div>
+            <div class="profileInfoData">
+                <h1>{{name}}</h1>
+                <h1 class="usrnameMain">username: <span class="usrName">{{username}}</span></h1>
+            </div>
+        </div>
+        <div class="profileInfoSec">
+            <button class="editProfileBtn">Edit Profile</button>
+        </div>
+    </div>
+
+    <div class="profileSettingSection">
+    <div class="setting-section">
+        <div class="profileSettingSectionHeader">
+            <div><i aria-hidden="false" class="fa fa-gear setting"></i></div>
+            <h1 class="profileSettingSectionHeaderVal">Workspaces</h1>
+        </div>
+        <hr style="width:100%;text-align:left;margin-left:0">
+        <div class="existingWkContainer">
+            {% for wk in workspaces %}
+            <li>{{wk.name}}</li>
+            {% endfor %}
+        </div>
+        <div class="settings-add-section-container">
+            <div class="settings-add-section">
+                <form class="settingsForm" id="addWorkspaceForm" action="/addWorkspace" method="POST">
+                    <input class="inp" name="workspace" type="text" placeholder="Add WorkSpace">
+                    <button class="btn_form_mini" onclick="addWorkspace()" type="button">Add</button>
+                </form>
+            </div>
+        </div>
+       
+        
+    </div>
+
+    <div class="setting-section">
+        <div class="profileSettingSectionHeader">
+            <div><i aria-hidden="false" class="fa fa-gear setting"></i></div>
+            <h1 class="profileSettingSectionHeaderVal">Labels</h1>
+        </div>
+        <hr style="width:100%;text-align:left;margin-left:0">
+        <div class="existingWkContainer">
+            {% for label in labels %}
+            <li>{{label.name}}</li>
+            {% endfor %}
+        </div>
+        <div class="settings-add-section-container">
+            <div class="settings-add-section">
+                <form class="settingsForm" id="addLabelForm" action="/addLabel" method="POST">
+                    <input class="inp" name="label" type="text" placeholder="Add Label">
+                    <button class="btn_form_mini" onclick="addLabel()" type="button">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<style>
+    .settings-add-section-container{
+        margin: 15px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 16px;
+        border-color: lightgray;
+        background-color: white;
+        padding: 10px;
+    }
+    .existingWkContainer{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .profileIconContainer{
+        padding: 10px 10px 0px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 16px;
+        border-color: lightgray;
+        background-color: lightgrey;
+        margin: 3px;
+
+    }
+    .usrName{
+        color: black;
+    }
+    .usrnameMain{
+        color: grey;
+        font-size: 15px;
+    }
+    .inp{
+        border-radius: 8px;
+        border: solid;
+        border-width: 1px;
+        border-color: lightblue;
+    }
+
+    .ics{
+        font-size: 100px;
+    }
+    .setting{
+        margin-left: 8px;
+        font-size: 20px;
+    }
+    .profileInfoSec{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .profileSettingSectionHeader{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        margin-top: 0;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .profileInfoData{
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        font-size: 10px;
+        width: 100%;
+    }
+
+    
+
+    .profileItem0{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 90vh;
+        min-width: 25vw;
+        padding: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 16px;
+        border-color: lightgray;
+        background-color: white;
+    }
+
+    .setting-section{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 0px;
+        padding-bottom: 15px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 16px;
+        border-color: lightgray;
+        background-color: white;
+    }
+
+    .profileSection{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        padding: 30px;
+    }
+
+    .profileSettingSection{
+        width: 100vw;
+        height: 90vh;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items:flex-start;
+    }
+
+    .editProfileBtn{
+        width: 100%;
+        height:40px;
+        color: green;
+        background-color: #2db55d14;
+        border-radius: 12px;
+        border-color: azure;
+        border-width: 1px;
+        border-style: solid;
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        font-family: Verdana;
+        font-weight: 500;
+    }
+    .profileSettingSectionHeaderVal{
+        padding: 0px;
+        margin: 0;
+        margin-left: 15px;
+    }
+    .settingsForm{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+
+<script>
+    function addLabel(){
+        document.getElementById("addLabelForm").submit();
+    }
+</script>
+
+<script>
+    function addWorkspace(){
+        document.getElementById("addWorkspaceForm").submit();
+    }
+</script>
+{% endblock %}

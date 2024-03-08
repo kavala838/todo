@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="logInFormSection">
+    <form id="logInForm" action="/login" method="POST">
+        <div class="logInHeader">Log In </div>
+        <div class="column-flex-container">
+            <label class="labels" for="usernameLogInForm">Username</label>
+            <input id="usernameLogInForm" onblur="checkUsername()" name="username" type="text" placeholder="Jon Snow">
+            <p class="errMsg" style="display: none;" name="errorMsg" id="usernameErr">*username should not be blank</p>
+        </div>
+
+        <div class="column-flex-container">
+            <label class="labels" for="passwordLogInForm">Password</label>
+            <input id="passwordLogInForm" onblur="checkPassword()" name="pass" type="password" placeholder="**********">
+            <p class="errMsg" style="display: none;" name="errorMsg" id="passwordErr">*password should not be blank</p>
+        </div>
+
+        <div class="column-flex-container">
+            <button class="btn_form" onclick="submitLogInForm()" type="button">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function submitLogInForm(){
+        var form = document.getElementById('logInForm');
+        if(checkErr()===0){
+            form.submit();
+        }
+        else{
+            alert('Insert valid Credentials');
+        }
+
+    }
+
+    function checkErr(){
+        var errElements=document.getElementsByName("errorMsg");
+        let count=0;
+        for (let i = 0; i < errElements.length; i++) {
+            if(errElements[i].style.display==="block"){
+                count+=1;
+            }
+        }
+        return count;
+    }
+
+    function checkUsername(){
+        if(document.getElementById("usernameLogInForm").value.length===0){
+            document.getElementById("usernameErr").style.display="block";
+        }
+        else{
+            document.getElementById("usernameErr").style.display="none";
+        }
+    }
+
+    function checkPassword(){
+        if(document.getElementById("passwordLogInForm").value.length===0){
+            document.getElementById("passwordErr").style.display="block";
+        }
+        else{
+            document.getElementById("passwordErr").style.display="none";
+        }
+    }
+</script>
+
+<style>
+
+    .logInHeader{
+        color: #282a35;
+        font-size: 29px;
+        font-weight: 700;
+        font-family: 'Source Sans Pro', sans-serif;
+        margin: 0 0 10px;
+    }
+
+    input{
+        width: 60vh;
+        height: 40px;
+        border-radius: 12px;
+        border-color: gray;
+        border-width: 1px;
+        border-style: solid;
+        padding-left: 10px;
+    }
+
+    .logInFormSection{
+        height: 100Vh;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .column-flex-container{
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        margin: 15px;
+        
+    }
+
+    .labels{
+        font-weight: 600;
+        color: #4a4a4a;
+        font-family: 'Source Sans Pro', sans-serif;
+        margin: 0 0 10px;
+    }
+
+    #logInForm{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        padding: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 16px;
+        border-color: lightgray;
+        background-color: white;
+    }
+</style>
+{% endblock %}
