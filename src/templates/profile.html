@@ -29,11 +29,48 @@
             <li>{{wk.name}}</li>
             {% endfor %}
         </div>
-        <div class="settings-add-section-container">
+
+        <div class="flex-container-row aed-section">
+            <div onclick="wkselectaed(this)" id="wk-aed-a" class="aed-item aed-select">Add</div>
+            <div onclick="wkselectaed(this)" id="wk-aed-e" class="aed-item">Edit</div>
+            <div onclick="wkselectaed(this)" id="wk-aed-d" class="aed-item">Delete</div>
+        </div>
+
+
+        <div id="wk-aed-a-item" class="settings-add-section-container aed-a">
             <div class="settings-add-section">
                 <form class="settingsForm" id="addWorkspaceForm" action="/addWorkspace" method="POST">
                     <input class="inp" name="workspace" type="text" placeholder="Add WorkSpace">
                     <button class="btn_form_mini" onclick="addWorkspace()" type="button">Add</button>
+                </form>
+            </div>
+        </div>
+
+        
+
+        <div style="display: none;" id="wk-aed-e-item" class="settings-add-section-container aed-e">
+            <div class="settings-add-section">
+                <form class="settingsForm" id="editWorkspaceForm" action="/editWorkspace" method="POST">
+                    <select class="editWks" id="wkspaces" name="wkspaces">
+                        {% for wk in workspaces %}
+                        <option value="{{wk.id}}">{{wk.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input class="inp" name="editworkspace" type="text" placeholder="edit WorkSpace">
+                    <button class="btn_form_mini" onclick="editWorkspace()" type="button">Edit</button>
+                </form>
+            </div>
+        </div>
+
+        <div style="display: none;" id="wk-aed-d-item" class="settings-add-section-container aed-d">
+            <div class="settings-add-section">
+                <form class="settingsForm" id="deleteWorkspaceForm" action="/deleteWorkspace" method="POST">
+                    <select class="editWks" id="wkspacesdelete" name="wkspacesdelete">
+                        {% for wk in workspaces %}
+                        <option value="{{wk.id}}">{{wk.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn_form_mini" onclick="deleteWorkspace()" type="button">Delete</button>
                 </form>
             </div>
         </div>
@@ -65,6 +102,27 @@
 </div>
 
 <style>
+    .aed-select{
+        border-style: solid;
+        border-width: 0px;
+        border-color: blue;
+        border-bottom-width: 2px;
+    }
+    .aed-section{
+        border-style: solid;
+        border-width: 0px;
+        border-color: grey;
+        border-bottom-width: 1px;
+        margin: 15px;
+        margin-top: 25px;
+    }
+    .aed-item{
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+    .editWks{
+        margin-bottom: 6px;
+    }
     .settings-add-section-container{
         margin: 15px;
         border-style: solid;
@@ -225,6 +283,46 @@
 <script>
     function addWorkspace(){
         document.getElementById("addWorkspaceForm").submit();
+    }
+    function editWorkspace(){
+        document.getElementById("editWorkspaceForm").submit();
+    }
+    function deleteWorkspace(){
+        if(confirm("Are sure Want to delete?")){
+        document.getElementById("deleteWorkspaceForm").submit();
+        }
+    }
+    function wkselectaed(ele){
+        let ele1=document.getElementById("wk-aed-a");
+        let ele2=document.getElementById("wk-aed-e");
+        let ele3=document.getElementById("wk-aed-d");
+
+        let elei1=document.getElementById("wk-aed-a-item");
+        let elei2=document.getElementById("wk-aed-e-item");
+        let elei3=document.getElementById("wk-aed-d-item");
+        
+        ele.classList.add("aed-select");
+        if (ele1!==ele){
+            ele1.classList.remove("aed-select");
+            elei1.style.display="none";
+        }
+        else{
+            elei1.style.display="block";
+        }
+        if (ele2!==ele){
+            ele2.classList.remove("aed-select");
+            elei2.style.display="none";
+        }
+        else{
+            elei2.style.display="block";
+        }
+        if (ele3!==ele){
+            ele3.classList.remove("aed-select");
+            elei3.style.display="none";
+        }
+        else{
+            elei3.style.display="block";
+        }
     }
 </script>
 {% endblock %}

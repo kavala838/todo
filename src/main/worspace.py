@@ -91,6 +91,7 @@ def taskUnComplete():
 def deleteTask():
     id=int(request.args.get('id'))
     task=Task.query.filter_by(id=id).first()
-    db.session.delete(task)
-    db.session.commit()
+    if task.user_id==current_user.id:
+        db.session.delete(task)
+        db.session.commit()
     return redirect(url_for('main.home'))

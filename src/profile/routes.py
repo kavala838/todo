@@ -44,3 +44,27 @@ def addWorkspace():
     db.session.add(new_wk)
     db.session.commit()
     return redirect(url_for('profile.home'))
+
+@bp.route('/editWorkspace', methods=['POST'])
+@login_required
+def editWorkspace():
+    editName=request.form.get('editworkspace')
+    wk=request.form.get('wkspaces')
+    w=Workspace.query.filter_by(id=int(wk)).first()
+    if w.user_id==current_user.id and w.name!=editName:
+        w1=Workspace.query.filter_by(name=editName).first()
+        if not w1:
+            w.name=editName
+            db.session.commit()
+    return redirect(url_for('profile.home'))
+
+@bp.route('/deleteWorkspace', methods=['POST'])
+@login_required
+def deleteWorkspace():
+    wk=request.form.get('wkspacesdelete')
+    print(wk)
+    w=Workspace.query.filter_by(id=int(wk)).first()
+    if w and  w.user_id==current_user.id:
+        db.session.delete(w)
+        db.session.commit()
+    return redirect(url_for('profile.home'))
