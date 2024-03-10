@@ -12,6 +12,11 @@ from datetime import datetime
 @login_required
 def home():
     l=list(Workspace.query.filter_by(user_id=current_user.id).all())
+    if len(l)==0:
+        new_wk=Workspace(name="work", user_id=current_user.id)
+        db.session.add(new_wk)
+        db.session.commit()
+    l=list(Workspace.query.filter_by(user_id=current_user.id).all())
     print(l)
     t=current_user.tasks
     ws=request.args.get('wk') or '0'
@@ -26,7 +31,9 @@ def home():
         t2=Task.query.filter_by(user_id=current_user.id, workspace_id=int(ws), is_done=True).all()
         name=Workspace.query.filter_by(id=int(ws)).first()
     else:
-        return render_template('noworkspace.html')
+        print("why did it come to this")
+        
+
     for x in t:
         t1=x.deadline_datetime - datetime.now()
         x.overdue=False
