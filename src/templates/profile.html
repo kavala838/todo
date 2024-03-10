@@ -89,11 +89,45 @@
             <li>{{label.name}}</li>
             {% endfor %}
         </div>
-        <div class="settings-add-section-container">
+
+        <div class="flex-container-row aed-section">
+            <div onclick="labelselectaed(this)" id="label-aed-a" class="aed-item aed-select">Add</div>
+            <div onclick="labelselectaed(this)" id="label-aed-e" class="aed-item">Edit</div>
+            <div onclick="labelselectaed(this)" id="label-aed-d" class="aed-item">Delete</div>
+        </div> 
+
+        <div id="label-aed-a-item" class="settings-add-section-container aed-a">
             <div class="settings-add-section">
                 <form class="settingsForm" id="addLabelForm" action="/addLabel" method="POST">
                     <input class="inp" name="label" type="text" placeholder="Add Label">
                     <button class="btn_form_mini" onclick="addLabel()" type="button">Add</button>
+                </form>
+            </div>
+        </div>
+
+        <div style="display: none;" id="label-aed-e-item" class="settings-add-section-container aed-e">
+            <div class="settings-add-section">
+                <form class="settingsForm" id="editLabelForm" action="/editLabel" method="POST">
+                    <select class="editWks" id="currentlabel" name="currentlabel">
+                        {% for label in labels %}
+                        <option value="{{label.id}}">{{label.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input class="inp" name="editlabel" type="text" placeholder="edit label">
+                    <button class="btn_form_mini" onclick="editLabel()" type="button">Edit</button>
+                </form>
+            </div>
+        </div>
+
+        <div style="display: none;" id="label-aed-d-item" class="settings-add-section-container aed-d">
+            <div class="settings-add-section">
+                <form class="settingsForm" id="deleteLabelForm" action="/deleteLabel" method="POST">
+                    <select class="editWks" id="labeldelete" name="labeldelete">
+                        {% for label in labels %}
+                        <option value="{{label.id}}">{{label.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn_form_mini" onclick="deleteLabel()" type="button">Delete</button>
                 </form>
             </div>
         </div>
@@ -300,6 +334,48 @@
         let elei1=document.getElementById("wk-aed-a-item");
         let elei2=document.getElementById("wk-aed-e-item");
         let elei3=document.getElementById("wk-aed-d-item");
+        
+        ele.classList.add("aed-select");
+        if (ele1!==ele){
+            ele1.classList.remove("aed-select");
+            elei1.style.display="none";
+        }
+        else{
+            elei1.style.display="block";
+        }
+        if (ele2!==ele){
+            ele2.classList.remove("aed-select");
+            elei2.style.display="none";
+        }
+        else{
+            elei2.style.display="block";
+        }
+        if (ele3!==ele){
+            ele3.classList.remove("aed-select");
+            elei3.style.display="none";
+        }
+        else{
+            elei3.style.display="block";
+        }
+    }
+
+    
+    function editLabel(){
+        document.getElementById("editLabelForm").submit();
+    }
+    function deleteLabel(){
+        if(confirm("Are sure Want to delete?")){
+        document.getElementById("deleteLabelForm").submit();
+        }
+    }
+    function labelselectaed(ele){
+        let ele1=document.getElementById("label-aed-a");
+        let ele2=document.getElementById("label-aed-e");
+        let ele3=document.getElementById("label-aed-d");
+
+        let elei1=document.getElementById("label-aed-a-item");
+        let elei2=document.getElementById("label-aed-e-item");
+        let elei3=document.getElementById("label-aed-d-item");
         
         ele.classList.add("aed-select");
         if (ele1!==ele){

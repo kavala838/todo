@@ -68,3 +68,27 @@ def deleteWorkspace():
         db.session.delete(w)
         db.session.commit()
     return redirect(url_for('profile.home'))
+
+@bp.route('/editLabel', methods=['POST'])
+@login_required
+def editLabel():
+    editName=request.form.get('editlabel')
+    wk=request.form.get('currentlabel')
+    w=Label.query.filter_by(id=int(wk)).first()
+    if w.user_id==current_user.id and w.name!=editName:
+        w1=Label.query.filter_by(name=editName).first()
+        if not w1:
+            w.name=editName
+            db.session.commit()
+    return redirect(url_for('profile.home'))
+
+@bp.route('/deleteLabel', methods=['POST'])
+@login_required
+def deleteLabel():
+    wk=request.form.get('labeldelete')
+    print(wk)
+    w=Label.query.filter_by(id=int(wk)).first()
+    if w and  w.user_id==current_user.id:
+        db.session.delete(w)
+        db.session.commit()
+    return redirect(url_for('profile.home'))
