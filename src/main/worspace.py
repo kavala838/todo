@@ -10,7 +10,7 @@ from datetime import datetime
 
 @bp.route('/')
 @login_required
-def home():
+def home(isEdit=False, et=None):
     l=list(Workspace.query.filter_by(user_id=current_user.id).all())
     if len(l)==0:
         new_wk=Workspace(name="work", user_id=current_user.id)
@@ -50,7 +50,7 @@ def home():
             x.overdue=True
             x.timeleft=str(x.deadline_datetime.strftime('%A'))[:3]+', '+str(x.deadline_datetime.strftime('%d'))+' '+str(x.deadline_datetime.strftime('%b'))
         print(x.timeleft)
-    return render_template('home.html', workspaces=l, tasks=t, labels=labels, done_tasks=t2, ws=name)
+    return render_template('home.html', workspaces=l, tasks=t, labels=labels, done_tasks=t2, ws=name, isEdit=isEdit, et=et)
 
 @bp.route('/addTask', methods=['POST'])
 @login_required
@@ -100,5 +100,36 @@ def deleteTask():
     task=Task.query.filter_by(id=id).first()
     if task.user_id==current_user.id:
         db.session.delete(task)
+        db.session.commit()
+    return redirect(url_for('main.home'))
+
+@bp.route('/getEditTask', methods=['POST'])
+@login_required
+def getEditTask():
+    id=int(request.args.get('id'))
+    task=Task.query.filter_by(id=id).first()
+    if task.user_id==current_user.id:
+        et=Task.query.filter_by(id=id).first()
+        et.editdate=et.deadline_datetime.strftime('%Y-%m-%d')
+        return home(isEdit=True, et=et)
+    return redirect(url_for('main.home'))
+
+@bp.route('/editTask', methods=['POST'])
+@login_required
+def editTask():
+    id=int(request.args.get('id'))
+    task=Task.query.filter_by(id=id).first()
+    if task.user_id==current_user.id:
+        labels=request.form.getlist('editlabels')
+        name=request.form.get('edittaskName')
+        date= request.form.get('editTaskDeadLine')
+        deadline=datetime(int(date.split('-')[0]), int(date.split('-')[1]), int(date.split('-')[2]), 20,0,0)
+        wk=request.form.get('editwkspaces')
+        task.name=name
+        task.deadline_datetime=deadline
+        task.workspace_id=int(wk)
+        labels=request.form.getlist('editlabels')
+        labels_list=list(map(lambda l: Label.query.filter_by(id=int(l)).first(), labels))
+        task.labels=labels_list
         db.session.commit()
     return redirect(url_for('main.home'))

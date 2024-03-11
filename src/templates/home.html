@@ -36,6 +36,7 @@
                             action="/deleteTask?id={{task.id}}" method="POST"></form>
                         <i onclick="deleteTask('{{ task.id }}')"
                             class="delete-tasks task-item-ele red fa fa-trash-o"></i>
+                        <i onclick="editTaskReveal()" class="fa fa-pen"></i>
                         </form>
                         {% else %}
                         <form class="checkbox-tasks task-item-ele" id="completeTaskForm{{task.id}}"
@@ -47,7 +48,10 @@
                         <form class="task-item-ele" id="deleteTaskForm{{task.id}}" action="/deleteTask?id={{task.id}}"
                             method="POST"></form>
                         <i onclick="deleteTask('{{ task.id }}')" class="delete-tasks task-item-ele fa fa-trash-o"></i>
-                        </form>
+                        <form class="task-item-ele" id="geteditTaskForm{{task.id}}" action="/getEditTask?id={{task.id}}"
+                            method="POST"></form>
+                        <i onclick="editTaskReveal('{{ task.id }}')" class="fa fa-pen"></i>
+                    </form>
                         {% endif %}
                     </div>
                     <div class="label-container">
@@ -97,10 +101,18 @@
 
         <div class="home-section-item add-task-section">
             <div class="profileSettingSectionHeader">
-                <h1 class="profileSettingSectionHeaderVal">Add Task</h1>
+                {% if not isEdit %}
+                <h1 onclick="displayAddTask()" id="addTaskHeading" class="aed-select profileSettingSectionHeaderVal">Add Task</h1>
+                <h1 id="editTaskHeading"  class="profileSettingSectionHeaderVal">Edit Task</h1>
+                {% else %}
+                <h1 onclick="displayAddTask()" id="addTaskHeading" class="profileSettingSectionHeaderVal">Add Task</h1>
+                <h1 id="editTaskHeading"  class="aed-select profileSettingSectionHeaderVal">Edit Task</h1>
+                {% endif %}
             </div>
             <hr style="width:100%;text-align:left;margin-left:0">
-            <div class="addTaskFormContainer">
+
+            {% if not isEdit%}
+            <div id="addTaskFormContainer" class="addTaskFormContainer">
                 <form id="addTaskForm" action="/addTask" method="POST">
                     <label class="labels1" for="addTaskName">Task:</label>
                     <input class="addTaskInput" id="addTaskName" name="taskName" type="text" placeholder="Name of the task">
@@ -113,7 +125,7 @@
                         {% endfor %}
                     </select>
                     <label class="labels1" for="labelsSelect">Labels:</label>
-                    <select id="labelsSelect" name="labels1" style="display: none;" multiple>
+                    <select id="labelsSelect" name="labels" style="display: none;" multiple>
                         {% for label in labels%}
                         <option value="{{label.id}}">{{label.name}}</option>
                         {% endfor %}
@@ -126,13 +138,72 @@
                     <button class="addTaskButton" onclick="submitTask()" type="button">Add Task</button>
                 </form>
             </div>
+
+            {% else %}
+            <div  id="editTaskFormContainer" class="addTaskFormContainer">
+                <form id="editTaskForm" action="/editTask?id={{et.id}}" method="POST">
+                    <label class="labels1" for="editTaskName">Task:</label>
+                    <input value="{{et.name}}" class="addTaskInput" id="editTaskName" name="edittaskName" type="text" placeholder="Name of the task">
+                    <label class="labels1" for="editTaskDeadLine">DeadLine:</label>
+                    <input value="{{et.editdate}}" class="addTaskInput" id="editTaskDeadLine" name="editTaskDeadLine" type="date">
+                    <label class="labels1" for="editwkspaces">Workspace:</label>
+                    <select class="addTaskInput" id="editwkspaces" name="editwkspaces">
+                        {% for wk in workspaces %}
+                        {% if et.workspace_id==wk.id%}
+                        <option selected value="{{wk.id}}">{{wk.name}}</option>
+                        {% else %}
+                        <option value="{{wk.id}}">{{wk.name}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <label class="labels1" for="editlabelsSelect">Labels:</label>
+                    <select id="editlabelsSelect" name="editlabels" style="display: none;" multiple>
+                        {% for label in labels%}
+                        <option value="{{label.id}}">{{label.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="label-container" id="editlabelsSection">
+                        {% for label in labels %}
+                        <div id="editlabel{{label.id}}" value="{{label.id}}" onclick="edittoggleSelect(this)" class="edititem">{{label.name}}</div>
+                        {% endfor %}
+                    </div>
+                    <button class="addTaskButton" onclick="editTask()" type="button">Edit Task</button>
+                </form>
+            </div>
+            {% endif %}
+            
         </div>
 
     </div>
 
 </div>
 
+
+
 <script>
+
+    
+    
+    function displayAddTask(){
+        var addh=document.getElementById("addTaskHeading");
+        var edith=document.getElementById("editTaskHeading");
+        var add=document.getElementById("addTaskFormContainer");
+        var edit=document.getElementById("editTaskFormContainer");
+        add.style.display="block";
+        edit.style.display="none";
+        addh.classList.add("aed-select");
+        edith.classList.remove("aed-select");
+    }
+    function displayEditTask(){
+        var addh=document.getElementById("addTaskHeading");
+        var edith=document.getElementById("editTaskHeading");
+        var add=document.getElementById("addTaskFormContainer");
+        var edit=document.getElementById("editTaskFormContainer");
+        add.style.display="none";
+        edit.style.display="block";
+        addh.classList.remove("aed-select");
+        edith.classList.add("aed-select");
+    }
     function open1(ele) {
         console.log('hello');
         const tasks = document.getElementById("done-task-section");
@@ -156,6 +227,11 @@
         classNames.toggle("selectedItem");
     }
 
+    function edittoggleSelect(ele) {
+        const classNames = ele.classList;
+        classNames.toggle("selectedItem");
+    }
+
     function submitTask() {
         const lele = document.getElementById("labelsSelect");
         var leles = document.getElementsByClassName('item');
@@ -165,6 +241,17 @@
             t.selected = true;
         }
         document.getElementById("addTaskForm").submit();
+    }
+
+    function editTask() {
+        const lele = document.getElementById("editlabelsSelect");
+        var leles = document.getElementsByClassName('edititem');
+        const res = Array.from(leles).filter(checkSelected);
+        for (let i = 0; i < res.length; i++) {
+            var t = lele.querySelector('[value="' + res[i].getAttribute('value') + '"]');
+            t.selected = true;
+        }
+        document.getElementById("editTaskForm").submit();
     }
 
     function checkSelected(ele) {
@@ -181,9 +268,30 @@
     function deleteTask(id) {
         document.getElementById("deleteTaskForm" + id).submit();
     }
+
+    function editTaskReveal(id) {
+        document.getElementById("geteditTaskForm" + id).submit();
+    }
 </script>
+{% if isEdit %}
+    {% for label in labels %}
+        {% if label in et.labels %}
+        <script>
+            console.log("its working priya");
+            var ele = document.getElementById("editlabel{{label.id}}");
+            edittoggleSelect(ele);
+        </script>
+       {% endif %}
+    {% endfor %}
+{% endif %}
 
 <style>
+    .aed-select{
+        border-style: solid;
+        border-width: 0px;
+        border-color: blue;
+        border-bottom-width: 2px;
+    }
     .addTaskButton{
         margin-top: 8px;
         align-self: center;
@@ -246,7 +354,7 @@
     .profileSettingSectionHeader {
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
     }
 
@@ -299,6 +407,20 @@
     }
 
     .item {
+        background-color: transparent;
+        border-color: grey;
+        border-style: solid;
+        border-radius: 5px;
+        border-width: 1px;
+        color: black;
+        padding: 1px;
+        margin: 0px;
+        margin-bottom: 2px;
+        margin-left: 4px;
+        font-size: 12px;
+    }
+
+    .edititem {
         background-color: transparent;
         border-color: grey;
         border-style: solid;
