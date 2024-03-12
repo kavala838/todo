@@ -6,7 +6,7 @@
     <div class="workspace-section">
         {% for wk in workspaces %}
         {% if wk==ws %}
-        <div class="highlighted-wk-link workspace-section-item-1"><a href="/?wk={{ wk.id }}">{{wk.name}}</a></div>
+        <div class="workspace-section-item aed-select"><a href="/?wk={{ wk.id }}">{{wk.name}}</a></div>
         {% else %}
         <div class="workspace-section-item"><a href="/?wk={{ wk.id }}">{{wk.name}}</a></div>
         {% endif %}
@@ -359,11 +359,13 @@
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        width: 100vw;
-        margin: 0px;
+        width: 80vw;
+        margin: 20px;
         border-style: solid;
         border-color: grey;
-        border-width: 1px;
+        border-width: 0px;
+        border-bottom-width: 1px;
+        padding: 10px;
     }
 
     .home-container {
