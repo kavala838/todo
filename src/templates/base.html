@@ -25,14 +25,31 @@
             {% endif %}
         </div>
 
-        <div class="falshMessages">
+        <div class="">
             {% with messages=get_flashed_messages() %}
                 {% if messages %}
-                    <ul class=flashes>
                     {% for message in messages %}
-                    <li>{{ message }}</li>
+                    
+                    {% if message[:3]=="err" %}
+                    <div class="flashMessages msg-err">
+                        <i class="fa fa-exclamation"></i>
+                        <div class="flash-message">{{ message }}</div>
+                        <div onclick="return this.parentNode.remove();" class="">X</div>
+                    </div>
+                    {% elif message[:3]=="suc" %}
+                    <div class="flashMessages msg-succ">
+                        <i class="fa fa-exclamation"></i>
+                        <div class="flash-message">{{ message }}</div>
+                        <div onclick="return this.parentNode.remove();" class="">X</div>
+                    </div>
+                    {% else %}
+                    <div class="flashMessages  msg-info">
+                        <i class="fa fa-info"></i>
+                        <div class="flash-message">{{ message }}</div>
+                        <div onclick="return this.parentNode.remove();" class="">X</div>
+                    </div>
+                    {% endif %}
                     {% endfor %}
-                    </ul>
                 {% endif %}
             {% endwith %}
         </div>
@@ -48,6 +65,32 @@
 
 
 <style>
+    .flashMessages{
+        padding-left: 20px;
+        padding-right: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+    .flash-message{
+        font-size: 15px;
+        margin-left: 20px;
+    }
+    .msg-err{
+        background-color: red;
+        color: white;
+
+    }
+    .msg-info{
+        background-color: blue;
+        color: white;
+    }
+    .msg-succ{
+        background-color: green;
+        color: white;
+    }
     a{
         color: white;
         text-decoration: none;

@@ -18,11 +18,11 @@ def addLabel():
     
     name=request.form.get('label')
     if len(name)==0:
-        flash('Label is not valid')
+        flash('errLabel is not valid')
         return redirect(url_for('profile.home'))
     label=Label.query.filter_by(name=name).first()
     if label:
-        flash('Label already Present')
+        flash('errLabel already Present')
         return redirect(url_for('profile.home'))
     new_label=Label(name=name, user_id=current_user.id)
     db.session.add(new_label)
@@ -34,11 +34,11 @@ def addLabel():
 def addWorkspace():
     name=request.form.get('workspace')
     if len(name)==0:
-        flash('Workspace is not valid')
+        flash('errWorkspace is not valid')
         return redirect(url_for('profile.home'))
     wk=Workspace.query.filter_by(name=name).first()
     if wk:
-        flash('Workspace already Present')
+        flash('errWorkspace already Present')
         return redirect(url_for('profile.home'))
     new_wk=Workspace(name=name, user_id=current_user.id)
     db.session.add(new_wk)

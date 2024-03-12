@@ -16,7 +16,7 @@ def login_us():
     password= request.form.get('pass')
     user = User.query.filter_by(username=username).first()
     if not user or not check_password_hash(user.password, password):
-        flash('Credentials did not match! Please Try again with different values.')
+        flash('errCredentials did not match! Please Try again with different values.')
         return redirect(url_for('auth.login'))
     login_user(user, remember=True, duration=datetime.timedelta(minutes=10))
     print('user logged in')
