@@ -28,29 +28,29 @@
                         {% if task.overdue %}
                         <form class='checkbox-tasks red task-item-ele' id="completeTaskForm{{task.id}}"
                             action="/completeTask?id={{task.id}}" method="POST">
-                            <input onchange="completeTask('{{ task.id }}')" type="checkbox">
+                            <input class="hvr" onchange="completeTask('{{ task.id }}')" type="checkbox">
                         </form>
                         <p class="name-tasks red task-item-ele">{{task.name}}</p>
                         <p class="timeleft-tasks red task-item-ele">{{task.timeleft}}</p>
                         <form class="red task-item-ele" id="deleteTaskForm{{task.id}}"
                             action="/deleteTask?id={{task.id}}" method="POST"></form>
-                        <i onclick="deleteTask('{{ task.id }}')"
-                            class="delete-tasks task-item-ele red fa fa-trash-o"></i>
-                        <i onclick="editTaskReveal()" class="fa fa-pen"></i>
+                        <i  onclick="deleteTask('{{ task.id }}')"
+                            class="hvr delete-tasks task-item-ele red fa fa-trash-o"></i>
+                        <i  onclick="editTaskReveal()" class="hvr fa fa-pen"></i>
                         </form>
                         {% else %}
                         <form class="checkbox-tasks task-item-ele" id="completeTaskForm{{task.id}}"
                             action="/completeTask?id={{task.id}}" method="POST">
-                            <input onchange="completeTask('{{ task.id }}')" type="checkbox">
+                            <input class="hvr" onchange="completeTask('{{ task.id }}')" type="checkbox">
                         </form>
                         <p class="name-tasks task-item-ele">{{task.name}}</p>
                         <p class="timeleft-tasks task-item-ele">{{task.timeleft}}</p>
                         <form class="task-item-ele" id="deleteTaskForm{{task.id}}" action="/deleteTask?id={{task.id}}"
                             method="POST"></form>
-                        <i onclick="deleteTask('{{ task.id }}')" class="delete-tasks task-item-ele fa fa-trash-o"></i>
+                        <i onclick="deleteTask('{{ task.id }}')" class="hvr delete-tasks task-item-ele fa fa-trash-o"></i>
                         <form class="task-item-ele" id="geteditTaskForm{{task.id}}" action="/getEditTask?id={{task.id}}"
                             method="POST"></form>
-                        <i onclick="editTaskReveal('{{ task.id }}')" class="fa fa-pen"></i>
+                        <i onclick="editTaskReveal('{{ task.id }}')" class="hvr fa fa-pen"></i>
                     </form>
                         {% endif %}
                     </div>
@@ -66,9 +66,9 @@
 
             </div>
             <div class="profileSettingSectionHeader">
-                <div id="tasks-close" onclick="open1(this)"><i class="fa fa-greater-than"></i></div>
+                <div id="tasks-close" onclick="open1(this)"><i class="fa fa-greater-than hvr"></i></div>
                 <div id="tasks-open" style="display: none;" onclick="close1(this)">
-                    <h1 class="v-open">V</h1>
+                    <h1  class="v-open hvr">V</h1>
                 </div>
                 <h1 class="profileSettingSectionHeaderVal">Completed Tasks</h1>
             </div>
@@ -102,10 +102,10 @@
         <div class="home-section-item add-task-section">
             <div class="profileSettingSectionHeader">
                 {% if not isEdit %}
-                <h1 onclick="displayAddTask()" id="addTaskHeading" class="aed-select profileSettingSectionHeaderVal">Add Task</h1>
+                <h1 onclick="displayAddTask()" id="addTaskHeading" class="hvr aed-select profileSettingSectionHeaderVal">Add Task</h1>
                 <h1 id="editTaskHeading"  class="profileSettingSectionHeaderVal">Edit Task</h1>
                 {% else %}
-                <h1 onclick="displayAddTask()" id="addTaskHeading" class="profileSettingSectionHeaderVal">Add Task</h1>
+                <h1 onclick="displayAddTask()" id="addTaskHeading" class="hvr profileSettingSectionHeaderVal">Add Task</h1>
                 <h1 id="editTaskHeading"  class="aed-select profileSettingSectionHeaderVal">Edit Task</h1>
                 {% endif %}
             </div>
@@ -117,12 +117,12 @@
                     <label class="labels1" for="addTaskName">Task:</label>
                     <input class="addTaskInput" id="addTaskName" name="taskName" type="text" placeholder="Name of the task">
                     <label class="labels1" for="addTaskDeadLine">DeadLine:</label>
-                    <input class="addTaskInput" id="addTaskDeadLine" name="deadline" type="date">
+                    <input class="addTaskInput hvr" id="addTaskDeadLine" name="deadline" type="date">
                     <script>
                         document.getElementById('addTaskDeadLine').valueAsDate = new Date();
                     </script>
                     <label class="labels1" for="wkspaces">Workspace:</label>
-                    <select class="addTaskInput" id="wkspaces" name="wkspaces">
+                    <select class="addTaskInput hvr" id="wkspaces" name="wkspaces">
                         {% for wk in workspaces %}
                         <option value="{{wk.id}}">{{wk.name}}</option>
                         {% endfor %}
@@ -135,7 +135,7 @@
                     </select>
                     <div class="label-container" id="labelsSection">
                         {% for label in labels %}
-                        <div value="{{label.id}}" onclick="toggleSelect(this)" class="item">{{label.name}}</div>
+                        <div value="{{label.id}}" onclick="toggleSelect(this)" class="item hvr">{{label.name}}</div>
                         {% endfor %}
                     </div>
                     <button class="addTaskButton" onclick="submitTask()" type="button">Add Task</button>
@@ -148,9 +148,9 @@
                     <label class="labels1" for="editTaskName">Task:</label>
                     <input value="{{et.name}}" class="addTaskInput" id="editTaskName" name="edittaskName" type="text" placeholder="Name of the task">
                     <label class="labels1" for="editTaskDeadLine">DeadLine:</label>
-                    <input value="{{et.editdate}}" class="addTaskInput" id="editTaskDeadLine" name="editTaskDeadLine" type="date">
+                    <input value="{{et.editdate}}" class="addTaskInput hvr" id="editTaskDeadLine" name="editTaskDeadLine" type="date">
                     <label class="labels1" for="editwkspaces">Workspace:</label>
-                    <select class="addTaskInput" id="editwkspaces" name="editwkspaces">
+                    <select class="addTaskInput hvr" id="editwkspaces" name="editwkspaces">
                         {% for wk in workspaces %}
                         {% if et.workspace_id==wk.id%}
                         <option selected value="{{wk.id}}">{{wk.name}}</option>
@@ -167,7 +167,7 @@
                     </select>
                     <div class="label-container" id="editlabelsSection">
                         {% for label in labels %}
-                        <div id="editlabel{{label.id}}" value="{{label.id}}" onclick="edittoggleSelect(this)" class="edititem">{{label.name}}</div>
+                        <div id="editlabel{{label.id}}" value="{{label.id}}" onclick="edittoggleSelect(this)" class="edititem hvr">{{label.name}}</div>
                         {% endfor %}
                     </div>
                     <button class="addTaskButton" onclick="editTask()" type="button">Edit Task</button>
