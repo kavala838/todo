@@ -27,6 +27,7 @@ def addLabel():
     new_label=Label(name=name, user_id=current_user.id)
     db.session.add(new_label)
     db.session.commit()
+    flash('sucLabel added successfully')
     return redirect(url_for('profile.home'))
 
 @bp.route('/addWorkspace', methods=['POST'])
@@ -43,6 +44,7 @@ def addWorkspace():
     new_wk=Workspace(name=name, user_id=current_user.id)
     db.session.add(new_wk)
     db.session.commit()
+    flash('sucWorkspace Added Successfully.')
     return redirect(url_for('profile.home'))
 
 @bp.route('/editWorkspace', methods=['POST'])
@@ -56,6 +58,11 @@ def editWorkspace():
         if not w1:
             w.name=editName
             db.session.commit()
+            flash('sucWorkspace edited successfully')
+        else:
+            flash('errWorkspace name already exists')
+    if  w.user_id==current_user.id and w.name==editName:
+        flash('errWorkspace name should be different to existing one!')
     return redirect(url_for('profile.home'))
 
 @bp.route('/deleteWorkspace', methods=['POST'])
@@ -67,6 +74,7 @@ def deleteWorkspace():
     if w and  w.user_id==current_user.id:
         db.session.delete(w)
         db.session.commit()
+        flash('sucWorkspace deleted successfully')
     return redirect(url_for('profile.home'))
 
 @bp.route('/editLabel', methods=['POST'])
@@ -80,6 +88,11 @@ def editLabel():
         if not w1:
             w.name=editName
             db.session.commit()
+            flash('sucLabel edited successfully.')
+        else:
+            flash('errLabel name already exists.')
+    if w.user_id==current_user.id and w.name==editName:
+        flash('errLabel name should be different to existing one!')
     return redirect(url_for('profile.home'))
 
 @bp.route('/deleteLabel', methods=['POST'])
@@ -91,4 +104,5 @@ def deleteLabel():
     if w and  w.user_id==current_user.id:
         db.session.delete(w)
         db.session.commit()
+        flash('sucLabel deleted Successfully.')
     return redirect(url_for('profile.home'))

@@ -1,5 +1,5 @@
 from src.main import bp
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_login import login_required, current_user
 from src.models.workspace import Workspace
 from src.models.task import Task
@@ -59,11 +59,16 @@ def task():
     t=current_user.tasks
     labels=request.form.getlist('labels')
     name=request.form.get('taskName')
+    if name=='':
+        flash('errTask name is not valid.')
+        return redirect(url_for('main.home'))
     date= request.form.get('deadline')
+
     deadline=datetime(int(date.split('-')[0]), int(date.split('-')[1]), int(date.split('-')[2]), 20,0,0)
     wk=request.form.get('wkspaces')
     task = Task.query.filter_by(name=name, workspace_id=int(wk)).first()
     if task:
+        flash('errTask name already present in the workspace.')
         return redirect(url_for('main.home'))
     print(type(date))
     new_task=Task(name=name, deadline_datetime=deadline, workspace_id=int(wk), user_id=current_user.id, created_datetime=datetime.now())
@@ -71,6 +76,7 @@ def task():
     new_task.labels=labels_list
     db.session.add(new_task)
     db.session.commit()
+    flash('sucTask added into workspace.')
     return redirect(url_for('main.home'))
 
 @bp.route('/completeTask', methods=['POST'])
@@ -101,6 +107,7 @@ def deleteTask():
     if task.user_id==current_user.id:
         db.session.delete(task)
         db.session.commit()
+        flash('sucTask Deleted')
     return redirect(url_for('main.home'))
 
 @bp.route('/getEditTask', methods=['POST'])
@@ -132,4 +139,5 @@ def editTask():
         labels_list=list(map(lambda l: Label.query.filter_by(id=int(l)).first(), labels))
         task.labels=labels_list
         db.session.commit()
+        flash('sucTask edited successfully')
     return redirect(url_for('main.home'))

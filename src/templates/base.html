@@ -33,13 +33,13 @@
                     {% if message[:3]=="err" %}
                     <div class="flashMessages msg-err">
                         <i class="fa fa-exclamation"></i>
-                        <div class="flash-message">{{ message }}</div>
+                        <div class="flash-message">{{ message[3:] }}</div>
                         <div onclick="return this.parentNode.remove();" class="">X</div>
                     </div>
                     {% elif message[:3]=="suc" %}
                     <div class="flashMessages msg-succ">
                         <i class="fa fa-exclamation"></i>
-                        <div class="flash-message">{{ message }}</div>
+                        <div class="flash-message">{{ message[3:] }}</div>
                         <div onclick="return this.parentNode.remove();" class="">X</div>
                     </div>
                     {% else %}

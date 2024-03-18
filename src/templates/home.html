@@ -118,6 +118,9 @@
                     <input class="addTaskInput" id="addTaskName" name="taskName" type="text" placeholder="Name of the task">
                     <label class="labels1" for="addTaskDeadLine">DeadLine:</label>
                     <input class="addTaskInput" id="addTaskDeadLine" name="deadline" type="date">
+                    <script>
+                        document.getElementById('addTaskDeadLine').valueAsDate = new Date();
+                    </script>
                     <label class="labels1" for="wkspaces">Workspace:</label>
                     <select class="addTaskInput" id="wkspaces" name="wkspaces">
                         {% for wk in workspaces %}
@@ -326,7 +329,7 @@
     }
 
     .task-item-ele {
-        margin-left: 10px;
+        margin-left: 0px;
         margin-top: 0px;
         margin-bottom: 0px;
     }

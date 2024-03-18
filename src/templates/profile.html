@@ -26,7 +26,7 @@
         <hr style="width:100%;text-align:left;margin-left:0">
         <div class="existingWkContainer">
             {% for wk in workspaces %}
-            <li>{{wk.name}}</li>
+            <a href="/?wk={{ wk.id }}">{{wk.name}}</a>
             {% endfor %}
         </div>
 
@@ -136,6 +136,10 @@
 </div>
 
 <style>
+    .existingWkContainer>a {
+        color: black;
+        padding: 3px 20px 3px;
+    }
     .aed-select{
         border-style: solid;
         border-width: 0px;
