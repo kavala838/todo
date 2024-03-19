@@ -13,7 +13,34 @@
             </div>
         </div>
         <div class="profileInfoSec">
-            <button class="editProfileBtn">Edit Profile</button>
+            <button onclick="displayeditProfileSection()" class="editProfileBtn">Edit Profile</button>
+        </div>
+        <div style="display: none;" class="editProfileSection" id="editProfileSection">
+            <div class="editProfileSettingSectionHeader">
+                <h1 onclick="displayeditnameform()" id="editnamesec" class="hvr aed-select editProfileSectionheader">Edit name</h1>
+                <h1 onclick="displayupdatepassform()" id="updatepasswordsec"  class="hvr editProfileSectionheader">Update Password</h1>
+            </div>
+            <hr style="width:100%;text-align:left;margin-left:0">
+
+            <div id="editNameFormContainer" class="addTaskFormContainer">
+                <form class="flex-container-column flex-c-c flex-a-c" id="editNameForm" action="/editName" method="POST">
+                    <input class="inp" name="editname" type="text" placeholder="Edit the Name">
+                    <button class="btn_form_mini">update</button>
+                </form>
+            </div>
+
+            
+            <div style="display: none;" id="updatePasswordFormContainer" class="addTaskFormContainer">
+                <form class="flex-container-column flex-c-c flex-a-c" id="updatepassform" action="/updatePassword" method="POST">
+                    <input class="inp" type="password" placeholder="current password" name="currP">
+                    <input id="newP" class="inp" type="password" placeholder="new password" name="newP">
+                    <p style="display: none;" id="newPMsg1" class="errMsg">*Password length is too short</p>
+                    <input id="rnewP" onblur="checkNewPassword()" class="inp" type="password" placeholder="retype new password" name="rnewP">
+                    <p style="display: none;" id="newPMsg" class="errMsg">*Password Does not Match</p>
+                    <button onclick="submitUpdatePassword(this)" type="button" class="btn_form_mini">Update</button>
+                </form>
+            </div>
+            
         </div>
     </div>
 
@@ -136,6 +163,16 @@
 </div>
 
 <style>
+    .editProfileSettingSectionHeader{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .editProfileSectionheader{
+        width: 50;
+        font-size: 15px;
+    }
     .aed-item:hover{
         cursor: pointer;
     }
@@ -200,6 +237,7 @@
         border: solid;
         border-width: 1px;
         border-color: lightblue;
+        margin: 2px;
     }
 
     .ics{
@@ -273,7 +311,7 @@
     .profileSection{
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
 
         padding: 30px;
@@ -317,8 +355,61 @@
 </style>
 
 <script>
+    function submitUpdatePassword(ele){
+        if(checkNewPassword()){
+            var ele1=document.getElementById('updatepassform');
+            ele1.submit();
+        }
+    }
+    function checkNewPassword(){
+        var ele = document.getElementById('newP');
+        var ele1 = document.getElementById('rnewP');
+        var err = document.getElementById('newPMsg');
+        var err1 = document.getElementById('newPMsg1');
+        if(ele.value!==ele1.value){
+            err.style.display='block';
+            return false;
+        }
+        else if(ele.value.length<5){
+                err1.style.display="block";
+                return false
+            }
+        else{
+            err1.style.display='none';
+            err.style.display='none';
+        }
+        return true;
+    }
     function addLabel(){
         document.getElementById("addLabelForm").submit();
+    }
+
+    function displayeditnameform(){
+        var editnamesec= document.getElementById('editnamesec');
+        var updatepasswordsec = document.getElementById('updatepasswordsec');
+        var editNameFormContainer = document.getElementById('editNameFormContainer');
+        var updatePasswordFormContainer = document.getElementById('updatePasswordFormContainer');
+
+        editnamesec.classList.add('aed-select');
+        updatepasswordsec.classList.remove('aed-select');
+        editNameFormContainer.style.display="block";
+        updatePasswordFormContainer.style.display='none';
+    }
+    function displayupdatepassform(){
+        var editnamesec= document.getElementById('editnamesec');
+        var updatepasswordsec = document.getElementById('updatepasswordsec');
+        var editNameFormContainer = document.getElementById('editNameFormContainer');
+        var updatePasswordFormContainer = document.getElementById('updatePasswordFormContainer');
+
+        updatepasswordsec.classList.add('aed-select');
+        editnamesec.classList.remove('aed-select');
+        updatePasswordFormContainer.style.display="block";
+        editNameFormContainer.style.display='none';
+    }
+
+    function displayeditProfileSection(){
+        var ele = document.getElementById('editProfileSection');
+        ele.style.display="block";
     }
 </script>
 

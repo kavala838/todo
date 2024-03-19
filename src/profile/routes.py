@@ -4,6 +4,8 @@ from flask_login import login_required, current_user
 from src.extensions import db
 from src.models.label import Label
 from src.models.workspace import Workspace
+from src.models.user import User
+from werkzeug.security import generate_password_hash, check_password_hash
 
 @bp.route('/profile')
 @login_required
@@ -105,4 +107,35 @@ def deleteLabel():
         db.session.delete(w)
         db.session.commit()
         flash('sucLabel deleted Successfully.')
+    return redirect(url_for('profile.home'))
+
+@bp.route('/editName', methods=['POST'])
+@login_required
+def editName():
+    editname=request.form.get('editname')
+    u=User.query.filter_by(id=current_user.id).first()
+    if editname!=current_user.name:
+        u.name=editname 
+        db.session.commit()
+        flash('sucName updated successfully')
+    return redirect(url_for('profile.home'))
+
+@bp.route('/updatePassword', methods=['POST'])
+@login_required
+def updatePassword():
+    newP=request.form.get('newP')
+    currP=request.form.get('currP')
+    rnewP=request.form.get('rnewP')
+    print(newP)
+    print(rnewP)
+    if newP!=rnewP:
+        flash('errNew Passwords do not match')
+        return redirect(url_for('profile.home'))
+    u=User.query.filter_by(id=current_user.id).first()
+    if check_password_hash(current_user.password, currP):
+        u.password=generate_password_hash(newP)
+        db.session.commit()
+        flash('sucPassword updated successfully')
+    else:
+        flash('errPassword is wrong')
     return redirect(url_for('profile.home'))
