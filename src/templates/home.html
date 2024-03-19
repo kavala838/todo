@@ -36,7 +36,9 @@
                             action="/deleteTask?id={{task.id}}" method="POST"></form>
                         <i  onclick="deleteTask('{{ task.id }}')"
                             class="hvr delete-tasks task-item-ele red fa fa-trash-o"></i>
-                        <i  onclick="editTaskReveal()" class="hvr fa fa-pen"></i>
+                        <form class="task-item-ele" id="geteditTaskForm{{task.id}}" action="/getEditTask?id={{task.id}}"
+                            method="POST"></form>
+                        <i  onclick="editTaskReveal('{{ task.id }}')" class="hvr fa fa-pen"></i>
                         </form>
                         {% else %}
                         <form class="checkbox-tasks task-item-ele" id="completeTaskForm{{task.id}}"
