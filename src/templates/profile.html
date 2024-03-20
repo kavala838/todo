@@ -53,7 +53,7 @@
         <hr style="width:100%;text-align:left;margin-left:0">
         <div class="existingWkContainer">
             {% for wk in workspaces %}
-            <a href="/?wk={{ wk.id }}">{{wk.name}}</a>
+            <a class="wkspacesLinks" href="/?wk={{ wk.id }}">{{wk.name}}</a>
             {% endfor %}
         </div>
 
@@ -163,6 +163,9 @@
 </div>
 
 <style>
+    .wkspacesLinks:hover{
+        color: blue;
+    }
     .editProfileSettingSectionHeader{
         display: flex;
         flex-direction: row;

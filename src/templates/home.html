@@ -8,7 +8,7 @@
         {% if wk==ws %}
         <div class="workspace-section-item aed-select"><a href="/?wk={{ wk.id }}">{{wk.name}}</a></div>
         {% else %}
-        <div class="workspace-section-item"><a href="/?wk={{ wk.id }}">{{wk.name}}</a></div>
+        <div class="workspace-section-item"><a class="wkspacesLinks" href="/?wk={{ wk.id }}">{{wk.name}}</a></div>
         {% endif %}
         {% endfor %}
     </div>
@@ -286,6 +286,9 @@
 {% endif %}
 
 <style>
+    .wkspacesLinks:hover{
+        color: blue;
+    }
     .aed-select{
         border-style: solid;
         border-width: 0px;
