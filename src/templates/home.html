@@ -126,7 +126,11 @@
                     <label class="labels1" for="wkspaces">Workspace:</label>
                     <select class="addTaskInput hvr" id="wkspaces" name="wkspaces">
                         {% for wk in workspaces %}
+                        {% if wk.id==ws.id %}
+                        <option value="{{wk.id}}" selected>{{wk.name}}</option>
+                        {% else %}
                         <option value="{{wk.id}}">{{wk.name}}</option>
+                        {% endif %}
                         {% endfor %}
                     </select>
                     <label class="labels1" for="labelsSelect">Labels:</label>

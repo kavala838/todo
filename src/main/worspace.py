@@ -10,7 +10,9 @@ from datetime import datetime
 
 @bp.route('/')
 @login_required
-def home(isEdit=False, et=None):
+def home(isEdit=False, et=None, wk='0'):
+    ws=request.args.get('wk') or wk
+    print(ws)
     l=list(Workspace.query.filter_by(user_id=current_user.id).all())
     if len(l)==0:
         new_wk=Workspace(name="work", user_id=current_user.id)
@@ -19,7 +21,6 @@ def home(isEdit=False, et=None):
     l=list(Workspace.query.filter_by(user_id=current_user.id).all())
     print(l)
     t=current_user.tasks
-    ws=request.args.get('wk') or '0'
     labels=current_user.labels
     name=''
     if ws=='0' and len(l)>int(0):
@@ -77,7 +78,7 @@ def task():
     db.session.add(new_task)
     db.session.commit()
     flash('sucTask added into workspace.')
-    return redirect(url_for('main.home'))
+    return home(wk=wk)
 
 @bp.route('/completeTask', methods=['POST'])
 @login_required
@@ -87,7 +88,7 @@ def taskComplete():
     task.is_done=True
     db.session.add(task)
     db.session.commit()
-    return redirect(url_for('main.home'))
+    return home(wk=str(task.workspace_id))
 
 @bp.route('/uncompleteTask', methods=['POST'])
 @login_required
@@ -97,7 +98,7 @@ def taskUnComplete():
     task.is_done=False
     db.session.add(task)
     db.session.commit()
-    return redirect(url_for('main.home'))
+    return home(wk=str(task.workspace_id))
 
 @bp.route('/deleteTask', methods=['POST'])
 @login_required
@@ -108,7 +109,7 @@ def deleteTask():
         db.session.delete(task)
         db.session.commit()
         flash('sucTask Deleted')
-    return redirect(url_for('main.home'))
+    return home(wk=str(task.workspace_id))
 
 @bp.route('/getEditTask', methods=['POST'])
 @login_required
@@ -118,7 +119,7 @@ def getEditTask():
     if task.user_id==current_user.id:
         et=Task.query.filter_by(id=id).first()
         et.editdate=et.deadline_datetime.strftime('%Y-%m-%d')
-        return home(isEdit=True, et=et)
+        return home(isEdit=True, et=et, wk=str(task.workspace_id))
     return redirect(url_for('main.home'))
 
 @bp.route('/editTask', methods=['POST'])
@@ -140,4 +141,4 @@ def editTask():
         task.labels=labels_list
         db.session.commit()
         flash('sucTask edited successfully')
-    return redirect(url_for('main.home'))
+    return home(wk=str(task.workspace_id))

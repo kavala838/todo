@@ -25,7 +25,7 @@
             {% endif %}
         </div>
 
-        <div class="">
+        <div id="flash-messages-container">
             {% with messages=get_flashed_messages() %}
                 {% if messages %}
                     {% for message in messages %}
@@ -61,7 +61,14 @@
 </html>
 
 
+<script>
+    var msgs=document.getElementById('flash-messages-container');
+    setTimeout(clearMsgs, 20000);
 
+    function clearMsgs(){
+        msgs.remove();
+    }
+</script>
 
 
 <style>
