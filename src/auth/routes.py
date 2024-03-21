@@ -29,7 +29,6 @@ def signup():
 
 @bp.route('/isUserIdAvailable')
 def isAvailable():
-    #fill
     username=request.args.get('username')
     user = User.query.filter_by(username=username).first()
     if user:
@@ -41,13 +40,18 @@ def signup_user():
     username=request.form.get('userId')
     password= request.form.get('pass')
     name=request.form.get('name')
+
+    if len(username)<5:
+        flash('errUsername is too short')
+        return redirect(url_for('auth.signup'))
     
     user = User.query.filter_by(username=username).first()
     if user:
+        flash('errUsername Exists, Please try different one')
         return redirect(url_for('auth.signup'))
     
     new_user=User(username=username, name=name, password=generate_password_hash(password))
     db.session.add(new_user)
     db.session.commit()
-    print("check here")
+    flash('sucSuccessful Sign Up!')
     return redirect(url_for('auth.login'))
