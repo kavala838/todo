@@ -22,6 +22,10 @@
                 <button class="mar-r btn"><a href="{{url_for('auth.login')}}">Log In</a></button>
                 <button class="mar-l btn"><a href="{{url_for('auth.signup')}}">Sign Up</a></button>
             </div>
+            {% else %}
+            <div class="flex-center btn-sec">
+                <button class="mar-r btn"><a href="{{url_for('profile.signoutUser')}}">Sign Out</a></button>
+            </div>
             {% endif %}
         </div>
 

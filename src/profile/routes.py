@@ -1,6 +1,6 @@
 from src.profile import bp
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, logout_user
 from src.extensions import db
 from src.models.label import Label
 from src.models.workspace import Workspace
@@ -17,15 +17,16 @@ def home():
 @bp.route('/addLabel', methods=['POST'])
 @login_required
 def addLabel():
-    
     name=request.form.get('label')
     if len(name)==0:
         flash('errLabel is not valid')
         return redirect(url_for('profile.home'))
+
     label=Label.query.filter_by(name=name).first()
     if label:
         flash('errLabel already Present')
         return redirect(url_for('profile.home'))
+    
     new_label=Label(name=name, user_id=current_user.id)
     db.session.add(new_label)
     db.session.commit()
@@ -39,10 +40,12 @@ def addWorkspace():
     if len(name)==0:
         flash('errWorkspace is not valid')
         return redirect(url_for('profile.home'))
+    
     wk=Workspace.query.filter_by(name=name).first()
     if wk:
         flash('errWorkspace already Present')
         return redirect(url_for('profile.home'))
+    
     new_wk=Workspace(name=name, user_id=current_user.id)
     db.session.add(new_wk)
     db.session.commit()
@@ -126,8 +129,6 @@ def updatePassword():
     newP=request.form.get('newP')
     currP=request.form.get('currP')
     rnewP=request.form.get('rnewP')
-    print(newP)
-    print(rnewP)
     if newP!=rnewP:
         flash('errNew Passwords do not match')
         return redirect(url_for('profile.home'))
@@ -139,3 +140,10 @@ def updatePassword():
     else:
         flash('errPassword is wrong')
     return redirect(url_for('profile.home'))
+
+@bp.route('/signout')
+@login_required
+def signoutUser():
+    logout_user()
+    flash('sucsuccussfully signed out!')
+    return redirect(url_for('auth.login')) 
