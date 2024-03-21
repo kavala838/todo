@@ -13,8 +13,6 @@
                     <li><a class="link-item" href="{{url_for('main.home')}}">Home</a></li>
                     <li><a class="link-item" href="{{url_for('profile.home')}}">Profile</a></li>
                     {% endif %}
-                    <li><a class="link-item" href="#">About Us</a></li>
-                    <li><a class="link-item" href="#">Contact us</a></li>
                 </ul>
             </div>
             {% if not current_user.is_authenticated %}
