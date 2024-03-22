@@ -9,7 +9,7 @@ def create_app(config_class=Config):
     app=Flask(__name__)
     app.config.from_object(config_class)
     db.init_app(app)
-    app.config['PERMANENT_SESSION_LIFETIME'] =  datetime.timedelta(minutes=10)
+    app.config['PERMANENT_SESSION_LIFETIME'] =  datetime.timedelta(minutes=30)
     app.config["SESSION_TYPE"] = "filesystem"
     app.config["SECRET_KEY"]="manisharmathegod"
     Session(app)

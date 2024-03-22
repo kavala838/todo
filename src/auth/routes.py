@@ -18,9 +18,7 @@ def login_us():
     if not user or not check_password_hash(user.password, password):
         flash('errCredentials did not match! Please Try again with different values.')
         return redirect(url_for('auth.login'))
-    login_user(user, remember=True, duration=datetime.timedelta(minutes=10))
-    print('user logged in')
-    session["time"]=datetime.datetime.now()+datetime.timedelta(minutes=10)
+    login_user(user, remember=True, duration=datetime.timedelta(minutes=30))
     return redirect(url_for('main.home'))
 
 @bp.route('/signup')
