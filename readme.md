@@ -51,5 +51,78 @@ The application utilizes SQLite as its database engine and Flask SQLAlchemy as t
 
 ## Authentication
 Authentication in this application is implemented using Flask-Login, a session management library that uses cookies. Users can register for an account, log in, and securely manage their tasks within their account.
-        
-    
+
+## Installation
+
+To run the ToDo application locally, follow these steps:
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/kavala838/todo.git
+    ```
+
+2. Create a virtual environment:
+
+    ```bash
+    py -m venv ./venv
+    ```
+
+3. Activate the virtual environment:
+
+    ```bash
+    # On Windows
+    .\venv\Scripts\activate
+
+    # On Unix or MacOS
+    source venv/bin/activate
+    ```
+
+4. Install dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+5. Set the variables for the app:
+
+    ```bash
+    # On Windows
+    set FLASK_APP=src
+    set FLASK_ENV=development
+
+    # On Unix or MacOS
+    export FLASK_APP=src
+    export FLASK_ENV=development
+    ```
+
+6. Initiate the database:
+
+    - Enter Flask shell:
+
+    ```bash
+    flask shell
+    ```
+
+    - Inside the Flask shell, run the following commands:
+
+    ```python
+    from src.extensions import db
+    db.create_all()
+    ```
+
+    This will create an `app.db` file in the root directory of the project.
+
+    - Exit from the Flask shell:
+
+    ```bash
+    exit()
+    ```
+
+7. Run the application:
+
+    ```bash
+    flask run
+    ```
+
+8. Access the application in your web browser(default port) at [http://localhost:5000](http://localhost:5000).
