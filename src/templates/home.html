@@ -149,6 +149,40 @@
             </div>
 
             {% else %}
+
+            <div style="display: none;" id="addTaskFormContainer" class="addTaskFormContainer">
+                <form id="addTaskForm" action="/addTask" method="POST">
+                    <label class="labels1" for="addTaskName">Task:</label>
+                    <input class="addTaskInput" id="addTaskName" name="taskName" type="text" placeholder="Name of the task">
+                    <label class="labels1" for="addTaskDeadLine">DeadLine:</label>
+                    <input class="addTaskInput hvr" id="addTaskDeadLine" name="deadline" type="date">
+                    <script>
+                        document.getElementById('addTaskDeadLine').valueAsDate = new Date();
+                    </script>
+                    <label class="labels1" for="wkspaces">Workspace:</label>
+                    <select class="addTaskInput hvr" id="wkspaces" name="wkspaces">
+                        {% for wk in workspaces %}
+                        {% if wk.id==ws.id %}
+                        <option value="{{wk.id}}" selected>{{wk.name}}</option>
+                        {% else %}
+                        <option value="{{wk.id}}">{{wk.name}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <label class="labels1" for="labelsSelect">Labels:</label>
+                    <select id="labelsSelect" name="labels" style="display: none;" multiple>
+                        {% for label in labels%}
+                        <option value="{{label.id}}">{{label.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="label-container" id="labelsSection">
+                        {% for label in labels %}
+                        <div value="{{label.id}}" onclick="toggleSelect(this)" class="item hvr">{{label.name}}</div>
+                        {% endfor %}
+                    </div>
+                    <button class="addTaskButton" onclick="submitTask()" type="button">Add Task</button>
+                </form>
+            </div>
             <div  id="editTaskFormContainer" class="addTaskFormContainer">
                 <form id="editTaskForm" action="/editTask?id={{et.id}}" method="POST">
                     <label class="labels1" for="editTaskName">Task:</label>
@@ -190,10 +224,8 @@
 
 
 <script>
-
-    
-    
     function displayAddTask(){
+        console.log('came here')
         var addh=document.getElementById("addTaskHeading");
         var edith=document.getElementById("editTaskHeading");
         var add=document.getElementById("addTaskFormContainer");
