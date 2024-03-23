@@ -126,3 +126,8 @@ To run the ToDo application locally, follow these steps:
     ```
 
 8. Access the application in your web browser(default port) at [http://localhost:5000](http://localhost:5000).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
