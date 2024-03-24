@@ -96,7 +96,7 @@ To run the ToDo application locally, follow these steps:
     export FLASK_ENV=development
     ```
 
-6. Initiate the database:
+6. Initiate the database (Delete the app.db file before this step):
 
     - Enter Flask shell:
 
