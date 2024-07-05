@@ -16,7 +16,7 @@ COPY . .
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Define environment variablesh
+# Define environment variables
 ENV FLASK_APP=src
 ENV FLASK_ENV=development
 ENV FLASK_RUN_HOST=0.0.0.0
